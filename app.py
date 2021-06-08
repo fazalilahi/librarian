@@ -21,30 +21,33 @@ db = SQLAlchemy(app)
 
 # model of archive
 class Archive(db.Model):
+    __tablename__ = "archive"
     id = db.Column(db.Integer, primary_key=True)
-    isbn = db.Column(db.Integer, unique=True)
+    bookID = db.Column(db.Integer, unique=True)
     fee = db.Column(db.Integer) 
     imported = db.Column(db.Integer) 
 
-def __init__(self, isbn, fee, imported):
-    self.isbn = isbn
+def __init__(self, bookID, fee, imported):
+    self.bookID = bookID
     self.fee = fee
     self.imported = imported 
 
     # model of user
 class User(db.Model):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     open = db.Column(db.DateTime, nullable=False)
     close = db.Column(db.DateTime, nullable=False)
-    bookisbn = db.Column(db.Integer, unique=True)
+    bookID = db.Column(db.Integer, unique=True)
     due = db.Column(db.Integer)
 
-def __init__(self, name, open, close, bookisbn):
+def __init__(self, name, open, close, bookID, due):
     self.name = name
     self.open = open
     self.close = close 
-    self.isbn = bookisbn
+    self.bookID = bookID
+    self.due = due
 
 @app.get("/")
 def hello_world():
@@ -56,11 +59,11 @@ def hello_world():
 
 @app.post("/add")
 def adding():
-    isbn = request.form['isbn']
+    bookID = request.form['bookID']
     imported = request.form['imported']
     fee = request.form['fee']
-    print(isbn, imported, fee)
-    data = Archive(isbn, fee, imported)
-    db.session.add(data)
+    print(bookID, imported, fee)
+    arc = Archive(bookID=bookID, fee=fee, imported=imported)
+    db.session.add(arc)
     db.session.commit()
     return render_template('add.html')

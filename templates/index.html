@@ -5,7 +5,7 @@
 {% for datas in data %}
 <form action="/add" method="POST">
     <label for="bookid">Book ID:</label>
-    <input name="isbn" id="bookid" value="{{ datas['bookID'] }}" readonly />
+    <input name="bookID" id="bookid" value="{{ datas['bookID'] }}" readonly />
     <br />
     <div>Title: {{ datas['title'] }}</div>
     <br />
